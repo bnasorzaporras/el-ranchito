@@ -268,35 +268,40 @@ function enviarPedido() {
   let direccion = document.getElementById("direccion").value;
   let celular = document.getElementById("celular").value;
   let distrito = document.getElementById("distrito").value;
-  let total = document.getElementById("total").innerText.split("Total: S/")[1]; // extrae total
 
   if (!nombre || !direccion || !celular || !distrito) {
     alert("Completa los campos");
     return;
   }
 
+  // Extraemos el total de forma segura
+  let totalText = document.getElementById("total").innerText;
+  let totalMatch = totalText.match(/Total: S\/(\d+(\.\d+)?)/);
+  let total = totalMatch ? totalMatch[1] : "0";
+
   let productos = document.querySelectorAll(".producto");
   let cantidades = document.querySelectorAll(".cantidad");
-
   let lista = "";
   for (let i = 0; i < productos.length; i++) {
     let index = productos[i].value;
     let cantidad = cantidades[i].value;
     if (index !== "") {
       let p = listaProductos[index];
-      lista += `- ${cantidad} ${p.nombre}%0A`;
+      lista += `- ${cantidad} ${p.nombre}\n`;
     }
   }
 
-  let mensaje = `📦 Nuevo pedido%0A%0A` +
-                `Nombre: ${nombre}%0A` +
-                `Productos:%0A${lista}` +
-                `Dirección: ${direccion}%0A` +
-                `Distrito: ${distrito}%0A` +
-                `Celular: ${celular}%0A` +
-                `💰 Monto total a pagar: S/${total}`;
+  let mensaje = `📦 Nuevo pedido
 
-  window.open(`https://wa.me/51987912419?text=${mensaje}`);
+Nombre: ${nombre}
+Productos:
+${lista}Dirección: ${direccion}
+Distrito: ${distrito}
+Celular: ${celular}
+💰 Monto total a pagar: S/${total}`;
+
+  // Codificamos correctamente el mensaje
+  window.open(`https://wa.me/51987912419?text=${encodeURIComponent(mensaje)}`);
 }
 </script>
 
