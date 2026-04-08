@@ -7,11 +7,13 @@
 
 <style>
 body {
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   max-width: 420px;
   margin: auto;
   padding: 10px;
   background-color: #fff8f0;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 /* HEADER */
@@ -67,10 +69,23 @@ input[type="button"]:hover {
   margin-bottom: 8px;
   display: flex;
   gap: 6px;
+  align-items: center;
 }
 
 .cantidad {
   width: 60px;
+}
+
+/* Botón de eliminar */
+.borrar-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: #dc3545;
+}
+.borrar-btn:hover {
+  color: #a71d2a;
 }
 
 /* TOTAL */
@@ -97,7 +112,6 @@ input[type="button"]:hover {
 <body>
 
 <div class="header">
-  <!-- CAMBIA TU LOGO -->
   <img src="https://i.imgur.com/TU_LOGO.png" alt="Logo">
   <div>
     <h2>El Ranchito</h2>
@@ -146,7 +160,9 @@ input[type="button"]:hover {
       <option value="18">Tamal de Chancho - S/6</option>
     </select>
 
-    <input type="number" class="cantidad" value="1" min="1" max="20">
+    <input type="number" class="cantidad" value="1" min="1">
+
+    <button class="borrar-btn" onclick="this.parentElement.remove()">🗑️</button>
   </div>
 </div>
 
@@ -218,8 +234,16 @@ function agregarProducto() {
   input.value = 1;
   input.min = 1;
 
+  let btnBorrar = document.createElement("button");
+  btnBorrar.className = "borrar-btn";
+  btnBorrar.innerHTML = "🗑️";
+  btnBorrar.onclick = function() {
+    div.remove();
+  };
+
   div.appendChild(select);
   div.appendChild(input);
+  div.appendChild(btnBorrar);
 
   document.getElementById("productos").appendChild(div);
 }
@@ -274,7 +298,6 @@ function enviarPedido() {
     return;
   }
 
-  // Extraemos el total de forma segura
   let totalText = document.getElementById("total").innerText;
   let totalMatch = totalText.match(/Total: S\/(\d+(\.\d+)?)/);
   let total = totalMatch ? totalMatch[1] : "0";
@@ -300,7 +323,6 @@ Distrito: ${distrito}
 Celular: ${celular}
 💰 Monto total a pagar: S/${total}`;
 
-  // Codificamos correctamente el mensaje
   window.open(`https://wa.me/51987912419?text=${encodeURIComponent(mensaje)}`);
 }
 </script>
