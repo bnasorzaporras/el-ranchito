@@ -11,12 +11,14 @@ body {
   max-width: 420px;
   margin: auto;
   padding: 10px;
+  background-color: #fff8f0;
 }
 
 /* HEADER */
 .header {
   display: flex;
   align-items: center;
+  margin-bottom: 10px;
 }
 
 .header img {
@@ -39,9 +41,11 @@ input, select {
   margin: 6px 0;
   padding: 10px;
   font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
-/* BOTONES SEGUROS PARA SAFARI */
+/* BOTONES */
 input[type="button"] {
   width: 100%;
   margin: 6px 0;
@@ -51,11 +55,22 @@ input[type="button"] {
   color: white;
   border: none;
   border-radius: 8px;
+  cursor: pointer;
+}
+
+input[type="button"]:hover {
+  background-color: #218838;
 }
 
 /* PRODUCTOS */
 .producto-item {
   margin-bottom: 8px;
+  display: flex;
+  gap: 6px;
+}
+
+.cantidad {
+  width: 60px;
 }
 
 /* TOTAL */
@@ -63,6 +78,7 @@ input[type="button"] {
   font-weight: bold;
   white-space: pre-line;
   text-align: center;
+  margin: 10px 0;
 }
 
 /* TEXTOS */
@@ -73,6 +89,7 @@ input[type="button"] {
 
 .pago {
   text-align: center;
+  margin-top: 10px;
 }
 </style>
 </head>
@@ -104,7 +121,6 @@ input[type="button"] {
 
 <h3>Productos:</h3>
 
-<!-- 🔥 PRIMER PRODUCTO FIJO -->
 <div id="productos">
   <div class="producto-item">
     <select class="producto">
@@ -135,7 +151,6 @@ input[type="button"] {
 </div>
 
 <input type="button" value="➕ Agregar otro producto" onclick="agregarProducto()">
-
 <input type="button" value="💰 Calcular total" onclick="calcularTotal()">
 
 <p id="total"></p>
@@ -150,7 +165,6 @@ input[type="button"] {
 <input type="button" id="btnPedido" value="📲 Pedir delivery" style="display:none;" onclick="enviarPedido()">
 
 <script>
-
 const listaProductos = [
   {nombre:"Pan con Chicharron", precio:16},
   {nombre:"1/4 de chicharron", precio:26},
@@ -254,6 +268,7 @@ function enviarPedido() {
   let direccion = document.getElementById("direccion").value;
   let celular = document.getElementById("celular").value;
   let distrito = document.getElementById("distrito").value;
+  let total = document.getElementById("total").innerText.split("Total: S/")[1]; // extrae total
 
   if (!nombre || !direccion || !celular || !distrito) {
     alert("Completa los campos");
@@ -264,22 +279,25 @@ function enviarPedido() {
   let cantidades = document.querySelectorAll(".cantidad");
 
   let lista = "";
-
   for (let i = 0; i < productos.length; i++) {
     let index = productos[i].value;
     let cantidad = cantidades[i].value;
-
     if (index !== "") {
       let p = listaProductos[index];
-      lista += `${cantidad} ${p.nombre}%0A`;
+      lista += `- ${cantidad} ${p.nombre}%0A`;
     }
   }
 
-  let mensaje = `Hola soy ${nombre}%0A%0A${lista}%0A📍 ${direccion}%0A🏙 ${distrito}%0A📞 ${celular}%0A💰 Pagaré al 989107285`;
+  let mensaje = `📦 Nuevo pedido%0A%0A` +
+                `Nombre: ${nombre}%0A` +
+                `Productos:%0A${lista}` +
+                `Dirección: ${direccion}%0A` +
+                `Distrito: ${distrito}%0A` +
+                `Celular: ${celular}%0A` +
+                `💰 Monto total a pagar: S/${total}`;
 
   window.open(`https://wa.me/51987912419?text=${mensaje}`);
 }
-
 </script>
 
 </body>
