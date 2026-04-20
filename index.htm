@@ -7,104 +7,88 @@
 
 <style>
 body {
-  font-family: Arial, sans-serif;
+  font-family: Arial;
   max-width: 420px;
   margin: auto;
   padding: 10px;
-  background-color: #fff8f0;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  background: #fff8f0;
 }
 
-/* HEADER */
 .header {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
 }
 
 .header img {
   width: 60px;
-  border-radius: 10px;
   margin-right: 10px;
-}
-
-.header h2 {
-  margin: 0;
-}
-
-.header p {
-  font-size: 12px;
-  margin: 0;
+  border-radius: 10px;
 }
 
 input, select {
   width: 100%;
-  margin: 6px 0;
   padding: 10px;
-  font-size: 16px;
+  margin: 6px 0;
   border-radius: 6px;
   border: 1px solid #ccc;
 }
 
-/* BOTONES */
-input[type="button"] {
+button {
   width: 100%;
-  margin: 6px 0;
-  padding: 12px;
-  font-size: 16px;
-  background-color: #28a745;
-  color: white;
+  padding: 14px;
+  margin: 8px 0;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
+  color: white;
+  font-size: 16px;
   cursor: pointer;
 }
 
-input[type="button"]:hover {
-  background-color: #218838;
-}
+.btn-agregar { background: #ff9800; }
+.btn-yape { background: #6f42c1; }
+.btn-tarjeta { background: #007bff; }
+.btn-enviar { background: #25D366; }
 
-/* PRODUCTOS */
 .producto-item {
-  margin-bottom: 8px;
   display: flex;
   gap: 6px;
-  align-items: center;
+  margin-bottom: 8px;
 }
+
+.producto { flex: 1; }
 
 .cantidad {
   width: 60px;
+  text-align: center;
 }
 
-/* Botón de eliminar */
 .borrar-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 20px;
-  color: #dc3545;
-}
-.borrar-btn:hover {
-  color: #a71d2a;
+  width: 40px;
+  background: #ffe5e5;
+  color: red;
+  border-radius: 8px;
 }
 
-/* TOTAL */
 #total {
   font-weight: bold;
+  text-align: center;
   white-space: pre-line;
-  text-align: center;
-  margin: 10px 0;
-}
-
-/* TEXTOS */
-.alerta {
-  color: red;
-  text-align: center;
-}
-
-.pago {
-  text-align: center;
   margin-top: 10px;
+}
+
+.info {
+  background: #fff3cd;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+#yapeBox {
+  display: none;
+  background: #f3e8ff;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
 }
 </style>
 </head>
@@ -112,7 +96,7 @@ input[type="button"]:hover {
 <body>
 
 <div class="header">
-  <img src="https://i.imgur.com/TU_LOGO.png" alt="Logo">
+  <img src="https://i.imgur.com/TU_LOGO.png">
   <div>
     <h2>El Ranchito</h2>
     <p>Donde comer rico no es un mito</p>
@@ -121,68 +105,51 @@ input[type="button"]:hover {
 
 <hr>
 
-<p class="alerta">⚠️ Los precios NO incluyen delivery</p>
-
-<input type="text" id="nombre" placeholder="Nombre del cliente *">
+<input type="text" id="nombre" placeholder="Nombre *">
 <input type="text" id="direccion" placeholder="Dirección *">
 <input type="text" id="celular" placeholder="Celular *">
 
-<select id="distrito">
-<option value="">Selecciona distrito *</option>
+<select id="distrito" onchange="calcularTotal()">
+<option value="">Distrito *</option>
 <option value="La Molina">La Molina (S/10)</option>
 <option value="Santa Anita">Santa Anita (S/6)</option>
 </select>
 
-<h3>Productos:</h3>
+<h3>Productos</h3>
+<div id="productos"></div>
 
-<div id="productos">
-  <div class="producto-item">
-    <select class="producto">
-      <option value="">Selecciona producto</option>
-      <option value="0">Pan con Chicharron - S/16</option>
-      <option value="1">1/4 de chicharron - S/26</option>
-      <option value="2">1/2 chicharron - S/51</option>
-      <option value="3">1 kilo de chicharron - S/101</option>
-      <option value="4">Cafe pasado - S/5</option>
-      <option value="5">Te - S/2</option>
-      <option value="6">Manzanilla - S/2</option>
-      <option value="7">Anis - S/2</option>
-      <option value="8">Gaseosa Personal Inka Kola - S/3.5</option>
-      <option value="9">Gaseosa Personal Coca Cola - S/3.5</option>
-      <option value="10">Guarnicion extra de camote - S/6</option>
-      <option value="11">Guarnicion extra de cancha - S/4</option>
-      <option value="12">Guarnicion extra de papa - S/6</option>
-      <option value="13">Guarnicion extra de ensalada - S/5</option>
-      <option value="14">Guarnicion extra de mote - S/4</option>
-      <option value="15">Pan solo - S/1</option>
-      <option value="16">Guarnicion de aji - S/0.5</option>
-      <option value="17">Tamal de Pollo - S/6</option>
-      <option value="18">Tamal de Chancho - S/6</option>
-    </select>
+<button class="btn-agregar" onclick="agregarProducto()">➕ AGREGAR PRODUCTO</button>
 
-    <input type="number" class="cantidad" value="1" min="1">
+<p id="total">Selecciona productos para ver el total</p>
 
-    <button class="borrar-btn" onclick="this.parentElement.remove()">🗑️</button>
-  </div>
+<div class="info">
+📌 <strong>IMPORTANTE:</strong><br>
+1. El total se calcula automáticamente<br>
+2. Elige método de pago<br>
+3. Luego se enviará tu pedido por WhatsApp<br><br>
+
+💳 Tarjeta tiene recargo: <strong>2.95% + IGV</strong>
 </div>
 
-<input type="button" value="➕ Agregar otro producto" onclick="agregarProducto()">
-<input type="button" value="💰 Calcular total" onclick="calcularTotal()">
+<button class="btn-yape" onclick="mostrarYape()">📱 Pagar con Yape</button>
+<button class="btn-tarjeta" onclick="pagarIzipay()">💳 Solicitar pago con tarjeta</button>
 
-<p id="total"></p>
+<div id="yapeBox">
+  <h3>Pago con Yape</h3>
+  <p>Número: <strong>989107285</strong></p>
+  <p>Nombre: <strong>Belinda Asorza Porras</strong></p>
+  <p>Monto: <strong id="montoYape">S/0</strong></p>
+</div>
 
-<p class="pago">
-💰 Pago por Yape<br>
-<strong>989107285</strong><br>
-⚠️ Verifica el siguiente nombre antes de pagar:<br>
-<strong>Belinda Asorza Porras</strong>
-</p>
-
-<input type="button" id="btnPedido" value="📲 Pedir delivery" style="display:none;" onclick="enviarPedido()">
+<button class="btn-enviar" onclick="enviarPedido()">📲 ENVIAR PEDIDO</button>
 
 <script>
+
+let metodoPago = "";
+
 const listaProductos = [
   {nombre:"Pan con Chicharron", precio:16},
+  {nombre:"Porción de chicharrón", precio:16},
   {nombre:"1/4 de chicharron", precio:26},
   {nombre:"1/2 chicharron", precio:51},
   {nombre:"1 kilo de chicharron", precio:101},
@@ -203,47 +170,34 @@ const listaProductos = [
   {nombre:"Tamal de Chancho", precio:6}
 ];
 
-function crearSelect() {
-  let select = document.createElement("select");
-  select.className = "producto";
-
-  let option = document.createElement("option");
-  option.value = "";
-  option.text = "Selecciona producto";
-  select.appendChild(option);
-
-  listaProductos.forEach((p, i) => {
-    let op = document.createElement("option");
-    op.value = i;
-    op.text = `${p.nombre} - S/${p.precio}`;
-    select.appendChild(op);
-  });
-
-  return select;
-}
-
 function agregarProducto() {
   let div = document.createElement("div");
   div.className = "producto-item";
 
-  let select = crearSelect();
+  let select = document.createElement("select");
+  select.className = "producto";
+  select.onchange = calcularTotal;
+
+  select.innerHTML = `<option value="">Producto</option>` +
+    listaProductos.map((p,i)=>`<option value="${i}">${p.nombre} - S/${p.precio}</option>`).join("");
 
   let input = document.createElement("input");
   input.type = "number";
   input.className = "cantidad";
   input.value = 1;
-  input.min = 1;
+  input.oninput = calcularTotal;
 
-  let btnBorrar = document.createElement("button");
-  btnBorrar.className = "borrar-btn";
-  btnBorrar.innerHTML = "🗑️";
-  btnBorrar.onclick = function() {
+  let btn = document.createElement("button");
+  btn.innerHTML = "🗑️";
+  btn.className = "borrar-btn";
+  btn.onclick = () => {
     div.remove();
+    calcularTotal();
   };
 
   div.appendChild(select);
   div.appendChild(input);
-  div.appendChild(btnBorrar);
+  div.appendChild(btn);
 
   document.getElementById("productos").appendChild(div);
 }
@@ -258,7 +212,7 @@ function calcularTotal() {
 
   for (let i = 0; i < productos.length; i++) {
     let index = productos[i].value;
-    let cantidad = cantidades[i].value;
+    let cantidad = parseInt(cantidades[i].value) || 1;
 
     if (index !== "") {
       subtotal += listaProductos[index].precio * cantidad;
@@ -267,64 +221,130 @@ function calcularTotal() {
   }
 
   if (!hayProducto) {
-    alert("Selecciona al menos un producto");
+    document.getElementById("total").innerText = "Selecciona al menos un producto";
     return;
   }
 
   if (!distrito) {
-    alert("Selecciona distrito");
+    document.getElementById("total").innerText =
+      `Subtotal: S/${subtotal.toFixed(2)}\n⚠️ Falta seleccionar distrito`;
     return;
   }
 
   let delivery = distrito === "La Molina" ? 10 : 6;
-  let total = subtotal + delivery;
+  let totalBase = subtotal + delivery;
+
+  let comision = totalBase * 0.03481;
+  let totalTarjeta = totalBase + comision;
 
   document.getElementById("total").innerText =
-    "Subtotal: S/" + subtotal.toFixed(2) +
-    "\nDelivery: S/" + delivery +
-    "\nTotal: S/" + total.toFixed(2);
+`Subtotal: S/${subtotal.toFixed(2)}
+Delivery: S/${delivery.toFixed(2)}
 
-  document.getElementById("btnPedido").style.display = "block";
+💵 Yape: S/${totalBase.toFixed(2)}
+💳 Tarjeta: S/${totalTarjeta.toFixed(2)}`;
+
+  document.getElementById("montoYape").innerText = "S/" + totalBase.toFixed(2);
+}
+
+function obtenerTotal(tipo="yape") {
+  let texto = document.getElementById("total").innerText;
+
+  if (tipo === "tarjeta") {
+    let match = texto.match(/Tarjeta: S\/(\d+(\.\d+)?)/);
+    return match ? match[1] : 0;
+  }
+
+  let match = texto.match(/Yape: S\/(\d+(\.\d+)?)/);
+  return match ? match[1] : 0;
+}
+
+function mostrarYape() {
+  let total = obtenerTotal("yape");
+
+  if (total == 0) {
+    alert("Completa el pedido primero");
+    return;
+  }
+
+  metodoPago = "yape";
+  document.getElementById("yapeBox").style.display = "block";
+}
+
+function pagarIzipay() {
+  let total = obtenerTotal("tarjeta");
+
+  if (total == 0) {
+    alert("Completa el pedido primero");
+    return;
+  }
+
+  metodoPago = "tarjeta";
+  enviarPedido(); // 🚀 ENVÍA DIRECTO
 }
 
 function enviarPedido() {
+
+  if (!metodoPago) {
+    alert("Selecciona método de pago primero");
+    return;
+  }
+
   let nombre = document.getElementById("nombre").value;
   let direccion = document.getElementById("direccion").value;
   let celular = document.getElementById("celular").value;
   let distrito = document.getElementById("distrito").value;
 
-  if (!nombre || !direccion || !celular || !distrito) {
-    alert("Completa los campos");
-    return;
-  }
-
-  let totalText = document.getElementById("total").innerText;
-  let totalMatch = totalText.match(/Total: S\/(\d+(\.\d+)?)/);
-  let total = totalMatch ? totalMatch[1] : "0";
-
   let productos = document.querySelectorAll(".producto");
   let cantidades = document.querySelectorAll(".cantidad");
+
   let lista = "";
   for (let i = 0; i < productos.length; i++) {
     let index = productos[i].value;
     let cantidad = cantidades[i].value;
+
     if (index !== "") {
       let p = listaProductos[index];
       lista += `- ${cantidad} ${p.nombre}\n`;
     }
   }
 
-  let mensaje = `📦 Nuevo pedido
+  let mensaje = "";
+
+  if (metodoPago === "yape") {
+
+    mensaje = `📦 PEDIDO PAGADO (YAPE)
 
 Nombre: ${nombre}
-Productos:
-${lista}Dirección: ${direccion}
+${lista}
+Dirección: ${direccion}
 Distrito: ${distrito}
 Celular: ${celular}
-💰 Monto total a pagar: S/${total}`;
+
+💰 Total pagado: S/${obtenerTotal("yape")}`;
+
+  } else {
+
+    mensaje = `📦 PEDIDO
+
+Nombre: ${nombre}
+${lista}
+Dirección: ${direccion}
+Distrito: ${distrito}
+Celular: ${celular}
+
+💳 Pagaré con TARJETA
+💰 Monto: S/${obtenerTotal("tarjeta")}
+
+👉 Envíame link de pago`;
+
+  }
 
   window.open(`https://wa.me/51987912419?text=${encodeURIComponent(mensaje)}`);
 }
+
+agregarProducto();
+
 </script>
 
 </body>
